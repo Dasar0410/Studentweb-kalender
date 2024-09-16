@@ -1,17 +1,28 @@
-// Gets the table element
-const table = document.querySelector('.table-standard');
+
+const event_table = document.querySelector('.table-standard');
 
 // Gets all the rows in the table body for events
-const rows = table.querySelectorAll('tbody tr');
+const rows = event_table.querySelectorAll('tbody tr');
 
-//  Extracts the event data from each row and trims it down to the necessary information
+// Extracts the event data from each row and trims it down to the necessary information
 const eventData = [];
 rows.forEach(row => {
-    const date = row.querySelector('.col1-dato').textContent.trim();
-    const subject = row.querySelector('td:nth-child(2)').textContent.trim();
-    const information = row.querySelector('td:nth-child(3)').textContent.trim();
+    const dateDiv = row.querySelector('td.col1-dato');
+    const subjectCodeDiv = row.querySelector('td:nth-child(2) div:nth-child(2)');
+    const subjectNameDiv = row.querySelector('td:nth-child(2) div:nth-child(3)');
+    const informationDiv = row.querySelector('td:nth-child(3)');
 
-    eventData.push({ date, subject, information });
+    // Check if all required divs exist
+    if (dateDiv && subjectCodeDiv && subjectNameDiv && informationDiv) {
+        const date = dateDiv.textContent.trim();
+        const subjectCode = subjectCodeDiv.textContent.trim();
+        const subjectName = subjectNameDiv.textContent.trim();
+        const information = informationDiv.textContent.trim();
+
+        eventData.push({ date, subjectCode, subjectName, information });
+    } else {
+        console.warn('Missing required div elements in row:', row);
+    }
 });
 
 // Log the extracted event data

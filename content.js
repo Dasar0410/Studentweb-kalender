@@ -14,7 +14,9 @@ rows.forEach(row => {
 
     // Check if all required divs exist
     if (dateDiv && subjectCodeDiv && subjectNameDiv && informationDiv) {
-        const date = dateDiv.textContent.trim();
+        // Extract only the date text node
+        const dateTextNode = Array.from(dateDiv.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+        const date = dateTextNode ? dateTextNode.textContent.trim() : '';
         const subjectCode = subjectCodeDiv.textContent.trim();
         const subjectName = subjectNameDiv.textContent.trim();
         const information = informationDiv.textContent.trim();

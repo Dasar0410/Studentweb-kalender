@@ -1,3 +1,5 @@
+const { writeFileSync } = require('fs');
+const { createEvents } = require('ics');
 
 const event_table = document.querySelector('.table-standard');
 

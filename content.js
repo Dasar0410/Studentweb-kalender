@@ -12,9 +12,9 @@ rows.forEach(row => {
     const subjectNameDiv = row.querySelector('td:nth-child(2) div:nth-child(3)');
     const informationDiv = row.querySelector('td:nth-child(3)');
 
-    // Check if all required divs exist
+    // Checks if all required divs exist
     if (dateDiv && subjectCodeDiv && subjectNameDiv && informationDiv) {
-        // Extract only the date text node
+        // Extracts only the date text node
         const dateTextNode = Array.from(dateDiv.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
         const date = dateTextNode ? dateTextNode.textContent.trim() : '';
         const subjectCode = subjectCodeDiv.textContent.trim();
@@ -27,5 +27,25 @@ rows.forEach(row => {
     }
 });
 
-// Log the extracted event data
+// Log the extracted event data. To be removed in production
 console.log(eventData);
+
+const events = eventData.map(event => {
+    const [day, month, year] = event.date.split('.').map(Number);
+    return {
+        start: [year, month, day, 0, 0],
+        duration: { hours: 1 }, // This is a placeholder time until i figure out how to get the end time
+        title: `${event.subjectCode} - ${event.subjectName}`, 
+        description: event.information,
+    };
+});
+
+createEvents(events, (error, value) => {
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    writeFileSync('StudentWeb_kalender.ics', value);
+    console.log('ICS file created successfully.');
+});

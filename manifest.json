@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "StudentWeb Calendar Exporter",
+    "version": "1.0",
+    "description": "Export StudentWeb deadlines and exams to an .ics calendar file.",
+    "permissions": ["activeTab", "scripting"],
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": "icon.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://fsweb.no/studentweb/*"],
+        "js": ["content.js"]
+      }
+    ]
+  }

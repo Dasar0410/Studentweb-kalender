@@ -1,6 +1,3 @@
-const { writeFileSync } = require('fs');
-const { createEvents } = require('ics');
-
 const event_table = document.querySelector('.table-standard');
 
 // Gets all the rows in the table body for events
@@ -27,27 +24,42 @@ rows.forEach(row => {
     } else {
         console.warn('Missing required div elements in row:', row);
     }
+
 });
+
 
 // Log the extracted event data. To be removed in production
 console.log(eventData);
 
-const events = eventData.map(event => {
-    const [day, month, year] = event.date.split('.').map(Number);
-    return {
-        start: [year, month, day, 0, 0],
-        duration: { hours: 1 }, // This is a placeholder time until i figure out how to get the end time
-        title: `${event.subjectCode} - ${event.subjectName}`, 
-        description: event.information,
-    };
-});
+function convertDate(date) {
+    const [day, month, year] = date.split('.').map(Number);
+    return `${year}${String(month).padStart(2, '0')}${String(day).padStart(2, '0')}`;
+  }
 
-createEvents(events, (error, value) => {
-    if (error) {
-        console.error(error);
-        return;
-    }
 
-    writeFileSync('StudentWeb_kalender.ics', value);
-    console.log('ICS file created successfully.');
-});
+  let icsContent = "BEGIN:VCALENDAR\r\n" +
+                   "VERSION:2.0\r\n";
+                   "CALSCALE:GREGORIAN\r\n" +
+                   "METHOD:PUBLISH\r\n" +
+                   "PRODID:-//Dasar0410//StudentWebCalendar//EN\r\n";
+                   
+
+for (let i = 0; i < eventData.length; i++) {
+    const event = eventData[i];
+    icsContent += "BEGIN:VEVENT\r\n" +
+                  `UID:event-${i + 1}\r\n` +
+                  `DTSTAMP:${new Date().toISOString().replace(/[-:.]/g, '')}\r\n` +	
+                  `DTSTART;VALUE=DATE:${convertDate(event.date)}\r\n` +
+                  `DTEND;VALUE=DATE:${convertDate(event.date)}\r\n` +
+                  `SUMMARY:${event.subjectCode} - ${event.subjectName}\r\n` +
+                  `SEQUENCE:0\r\n` +
+                  "END:VEVENT\r\n";
+  }
+
+  icsContent += "END:VCALENDAR";
+
+
+
+  console.log(icsContent);
+
+

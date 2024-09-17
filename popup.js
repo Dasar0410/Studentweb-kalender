@@ -1,5 +1,5 @@
 document.getElementById('export').addEventListener('click', () => {
-    // Send a message to the content script to extract events
+    // Sends a message to the content script to extract events
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.scripting.executeScript({
         target: { tabId: tabs[0].id },

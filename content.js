@@ -58,7 +58,17 @@ for (let i = 0; i < eventData.length; i++) {
 
   icsContent += "END:VCALENDAR";
 
+createCalendarLink(icsContent);
 
+function createCalendarLink(icsContent) {
+    const blob = new Blob([icsContent], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'calendar.ics';
+    link.click();
+    URL.revokeObjectURL(url);
+}
 
   console.log(icsContent);
 

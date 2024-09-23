@@ -18,14 +18,19 @@ rows.forEach(row => {
         const date = dateTextNode ? dateTextNode.textContent.trim() : '';
         const subjectCode = subjectCodeDiv.textContent.trim();
         const subjectName = subjectNameDiv.textContent.trim();
-        const information = informationDiv.textContent.trim();
+        let information = informationDiv.textContent.trim();
+
+        information = information.split('   ')[0]; // Take only the text until the triple space "   "
+        information = information.split(' ').slice(1).join(' '); // remove the word information from each description
 
         eventData.push({ date, subjectCode, subjectName, information });
     } else {
         console.warn('Missing required div elements in row:', row);
     }
-
 });
+
+// Log the extracted event data. To be removed in production
+console.log(eventData);
 
 
 // Log the extracted event data. To be removed in production
@@ -52,6 +57,7 @@ for (let i = 0; i < eventData.length; i++) {
                   `DTSTART;VALUE=DATE:${convertDate(event.date)}\r\n` +
                   `DTEND;VALUE=DATE:${convertDate(event.date)}\r\n` +
                   `SUMMARY:${event.subjectCode} - ${event.subjectName}\r\n` +
+                  `DESCRIPTION:${event.information}\r\n` +
                   `SEQUENCE:0\r\n` +
                   "END:VEVENT\r\n";
   }
